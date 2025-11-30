@@ -315,8 +315,8 @@ public class GameAboutView extends Group {
 		
 		private Text fieldValueView = new Text();
 		
-        final WebView browser = new WebView();
-        final WebEngine webEngine = browser.getEngine();
+        //final WebView browser = new WebView();
+        //final WebEngine webEngine = browser.getEngine();
         
 		public Link(String fieldValue, String link) {
 			super();
