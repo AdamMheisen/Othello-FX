@@ -30,13 +30,13 @@ import javafx.scene.text.TextAlignment;
  */
 public class GameInfoView extends VBox {
 
-	private VBox[] infoHolder = new VBox[6];
+	private VBox[] infoHolder = new VBox[7];
 	
-	private Text[] infoContent = new Text[6];
+	private Text[] infoContent = new Text[7];
 	
-	private Button[] infoLabel = new Button[6];
+	private Button[] infoLabel = new Button[7];
 	
-	private StackPane[] infoPanels = new StackPane[6];
+	private StackPane[] infoPanels = new StackPane[7];
 	
 	private TextArea console = new TextArea("|");
 	
@@ -60,6 +60,7 @@ public class GameInfoView extends VBox {
     	setName(3, "Leafs Reached");
     	setName(4, "Nodes Examined");
     	setName(5, "Console");
+        setName(6, "Turn Duration");
     	
     	console.setEditable(false);
     	console.setPadding(new Insets(20));

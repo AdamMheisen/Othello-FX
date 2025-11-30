@@ -42,7 +42,7 @@ public interface EventCallbackController {
 
 	void setPossibleCells(PlayerType playerOne, List<Index> gameBoardObjectiveIndexes);
 
-	void displayInformation(int depthCounter, int leafCounter, int pruneCounter, int nodesExamined);
+	void displayInformation(int depthCounter, int leafCounter, int pruneCounter, int nodesExamined, long turnDurationMillis);
 
 	void showOnConsole(Object obj);
 

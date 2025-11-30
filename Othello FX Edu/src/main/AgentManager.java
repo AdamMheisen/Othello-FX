@@ -57,7 +57,7 @@ public class AgentManager extends Application{
 		//new Othello(primaryStage, new ExampleAgentC());
 		//new Othello(primaryStage, new ExampleAgentD());
         // Register AI as Player Two by passing it as agentTwo (agentOne = null)
-        new Othello(primaryStage, new AlphaBetaAgent("AI", PlayerTurn.PLAYER_TWO), null);
+       new Othello(primaryStage, new AlphaBetaAgent("AI", PlayerTurn.PLAYER_ONE), new AlphaBetaAgent("AI 2", PlayerTurn.PLAYER_TWO));
 	}
 
 	public static void main(String[] args) {

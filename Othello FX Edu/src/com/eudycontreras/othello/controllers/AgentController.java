@@ -169,14 +169,19 @@ public class AgentController {
 		}
 		
 		ThreadManager.execute(()->{
-			
+
+            long start = System.currentTimeMillis();
+
 			AgentMove move = agent.getMove(root);
+
+            long duration = System.currentTimeMillis() - start;
 			
 			othello.getGameController().passInformation(
 					agent.getSearchDepth(),
 					agent.getReachedLeafNodes(), 
 					agent.getPrunedCounter(), 
-					agent.getNodesExamined());
+					agent.getNodesExamined(),
+                    duration);
 			
 			
 			if(OthelloSettings.DEBUG_GAME){

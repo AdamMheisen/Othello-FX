@@ -11,17 +11,9 @@ import com.eudycontreras.othello.controllers.AgentController;
 import java.util.List;
 
 public class AlphaBetaAgent extends Agent {
-    private static final int MAX_DEPTH = 5;
+    private static final int MAX_DEPTH = 8;
 
     private static final long TIME_LIMIT_MILLIS = 4800L;
-
-    public AlphaBetaAgent(PlayerTurn playerTurn) {
-        super(playerTurn);
-    }
-
-    public AlphaBetaAgent(String agentName) {
-        super(agentName);
-    }
 
     public AlphaBetaAgent(String agentName, PlayerTurn playerTurn) {
         super(agentName, playerTurn);
@@ -29,7 +21,8 @@ public class AlphaBetaAgent extends Agent {
 
     @Override
     public AgentMove getMove(GameBoardState gameState) {
-        long endTime = System.currentTimeMillis() + TIME_LIMIT_MILLIS;
+        long startTime = System.currentTimeMillis();
+        long endTime = startTime + TIME_LIMIT_MILLIS;
 
         //reset counters
         this.nodesExamined = 0;
@@ -41,6 +34,9 @@ public class AlphaBetaAgent extends Agent {
 
         // check for null before isEmpty to avoid NPE
         if (moves == null || moves.isEmpty()) {
+            long durationMillis = System.currentTimeMillis() - startTime;
+            String durationText = String.format("%.2f s", durationMillis / 1000.0);
+            AgentController.updateGameInfo(6, durationText);
             return null;
         }
 
@@ -70,16 +66,7 @@ public class AlphaBetaAgent extends Agent {
             bestMove = moves.get(0);
         }
 
-        System.out.println("--------------------");
-        System.out.println("Search depth: " + this.searchDepth);
-        System.out.println("Nodes explored: " + nodesExamined);
-        System.out.println("Leaf nodes reached: "  + reachedLeafNodes);
-        System.out.println("Pruned counter : " + prunedCounter);
-        System.out.println("--------------------");
-
-
         return new MoveWrapper(bestMove);
-
     }
 
     private double alphaBeta( GameBoardState state, int depth, double alpha, double beta, PlayerTurn currentPlayer, long endTime, int currentDepth) {
