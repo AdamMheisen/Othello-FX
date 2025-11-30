@@ -52,12 +52,9 @@ public class AgentManager extends Application{
 	 */
 	@Override
 	public void start(Stage primaryStage) {
-		//new Othello(primaryStage, new ExampleAgentOne("Agent A"), new ExampleAgentTwo("Agent B"));
-		//new Othello(primaryStage, new ExampleAgentB());
-		//new Othello(primaryStage, new ExampleAgentC());
-		//new Othello(primaryStage, new ExampleAgentD());
-        // Register AI as Player Two by passing it as agentTwo (agentOne = null)
-       new Othello(primaryStage, new AlphaBetaAgent("AI", PlayerTurn.PLAYER_ONE), new AlphaBetaAgent("AI 2", PlayerTurn.PLAYER_TWO));
+		// Example of how to run the Othello application with two AI agents or vs the player
+        new Othello(primaryStage, new AlphaBetaAgent("AI", PlayerTurn.PLAYER_ONE), new AlphaBetaAgent("AI 2", PlayerTurn.PLAYER_TWO));
+
 	}
 
 	public static void main(String[] args) {

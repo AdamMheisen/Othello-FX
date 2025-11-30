@@ -1,18 +1,18 @@
 package main;
+
 import com.eudycontreras.othello.capsules.AgentMove;
 import com.eudycontreras.othello.capsules.MoveWrapper;
 import com.eudycontreras.othello.capsules.ObjectiveWrapper;
 import com.eudycontreras.othello.controllers.Agent;
+import com.eudycontreras.othello.controllers.AgentController;
 import com.eudycontreras.othello.enumerations.PlayerTurn;
 import com.eudycontreras.othello.models.GameBoardState;
-import com.eudycontreras.othello.controllers.AgentController;
-
 
 import java.util.List;
 
 public class AlphaBetaAgent extends Agent {
-    private static final int MAX_DEPTH = 6;
 
+    private static final int MAX_DEPTH = 6;
     private static final long TIME_LIMIT_MILLIS = 4800L;
 
     public AlphaBetaAgent(String agentName, PlayerTurn playerTurn) {
@@ -24,7 +24,7 @@ public class AlphaBetaAgent extends Agent {
         long startTime = System.currentTimeMillis();
         long endTime = startTime + TIME_LIMIT_MILLIS;
 
-        //reset counters
+        // Reset counters
         this.nodesExamined = 0;
         this.reachedLeafNodes = 0;
         this.prunedCounter = 0;
@@ -32,18 +32,18 @@ public class AlphaBetaAgent extends Agent {
 
         List<ObjectiveWrapper> moves = AgentController.getAvailableMoves(gameState, playerTurn);
 
-        //This is here so it doesn't crash when the game is over
+        // Avoid crash when there are no moves (game over, skip, etc.)
         if (moves == null || moves.isEmpty()) {
-
             return null;
         }
 
         ObjectiveWrapper bestMove = null;
         double bestValue = Double.NEGATIVE_INFINITY;
+
         for (ObjectiveWrapper move : moves) {
             GameBoardState child = AgentController.getNewState(gameState, move);
 
-            /**
+            /*
              * This line starts the alpha-beta search for one of the AI’s possible moves.
              * The AI has already made the move, so we pass the resulting board (“child”).
              * We reduce the depth by one, because the top level was handled in getMove.
@@ -93,7 +93,8 @@ public class AlphaBetaAgent extends Agent {
      *
      * If it’s the AI’s turn, the method tries to maximize the score.
      * If it’s the opponent’s turn, it tries to minimize the score.
-     * Alpha and beta values are updated, and branches are skipped when they cannot change the final result (alpha ≥ beta).
+     * Alpha and beta values are updated, and branches are skipped when they
+     * cannot change the final result (alpha ≥ beta).
      *
      * @param state         The current board position being evaluated.
      * @param depth         How many levels deeper the search is allowed to go.
@@ -102,23 +103,29 @@ public class AlphaBetaAgent extends Agent {
      * @param currentPlayer Which player is about to move at this node.
      * @param endTime       Absolute time limit; used to stop the search if time runs out.
      * @param currentDepth  The current depth in the search tree (used for statistics).
-     *
      * @return A heuristic evaluation of the state from the AI’s perspective.
      */
-    private double alphaBeta( GameBoardState state, int depth, double alpha, double beta, PlayerTurn currentPlayer, long endTime, int currentDepth) {
+    private double alphaBeta(GameBoardState state,
+                             int depth,
+                             double alpha,
+                             double beta,
+                             PlayerTurn currentPlayer,
+                             long endTime,
+                             int currentDepth) {
+
         nodesExamined++;
 
-        if(currentDepth > this.searchDepth) {
+        if (currentDepth > this.searchDepth) {
             this.searchDepth = currentDepth;
         }
 
-        // time cutoff
-        if(System.currentTimeMillis() >= endTime) {
+        // Time cutoff
+        if (System.currentTimeMillis() >= endTime) {
             reachedLeafNodes++;
             return AgentController.getGameEvaluation(state, playerTurn);
         }
 
-        // depth cutoff
+        // Depth cutoff
         if (depth <= 0) {
             reachedLeafNodes++;
             return AgentController.getGameEvaluation(state, playerTurn);
@@ -126,6 +133,7 @@ public class AlphaBetaAgent extends Agent {
 
         List<ObjectiveWrapper> moves = AgentController.getAvailableMoves(state, currentPlayer);
 
+        // No moves → treat as leaf
         if (moves == null || moves.isEmpty()) {
             reachedLeafNodes++;
             return AgentController.getGameEvaluation(state, playerTurn);
@@ -133,37 +141,60 @@ public class AlphaBetaAgent extends Agent {
 
         boolean maximizing = (currentPlayer == playerTurn);
 
-        if(maximizing) {
+        if (maximizing) {
             double value = Double.NEGATIVE_INFINITY;
+
             for (ObjectiveWrapper move : moves) {
                 GameBoardState child = AgentController.getNewState(state, move);
-                value = Math.max(value, alphaBeta(child, depth -1, alpha, beta, getOpponent(currentPlayer), endTime, currentDepth + 1 ));
+                value = Math.max(
+                        value,
+                        alphaBeta(child,
+                                depth - 1,
+                                alpha,
+                                beta,
+                                getOpponent(currentPlayer),
+                                endTime,
+                                currentDepth + 1)
+                );
                 alpha = Math.max(alpha, value);
 
-                if(alpha >= beta) {
+                if (alpha >= beta) {
                     prunedCounter++;
                     break;
                 }
             }
+
             return value;
-        } else  {
+        } else {
             double value = Double.POSITIVE_INFINITY;
+
             for (ObjectiveWrapper move : moves) {
                 GameBoardState child = AgentController.getNewState(state, move);
-                value = Math.min(value, alphaBeta(child, depth - 1, alpha, beta, getOpponent(currentPlayer), endTime, currentDepth + 1));
+                value = Math.min(
+                        value,
+                        alphaBeta(child,
+                                depth - 1,
+                                alpha,
+                                beta,
+                                getOpponent(currentPlayer),
+                                endTime,
+                                currentDepth + 1)
+                );
                 beta = Math.min(beta, value);
-                if(alpha >= beta) {
+
+                if (alpha >= beta) {
                     prunedCounter++;
                     break;
                 }
             }
+
             return value;
         }
     }
 
     private PlayerTurn getOpponent(PlayerTurn turn) {
-        return (turn == PlayerTurn.PLAYER_ONE) ? PlayerTurn.PLAYER_TWO : PlayerTurn.PLAYER_ONE;
+        return (turn == PlayerTurn.PLAYER_ONE)
+                ? PlayerTurn.PLAYER_TWO
+                : PlayerTurn.PLAYER_ONE;
     }
-
-
 }

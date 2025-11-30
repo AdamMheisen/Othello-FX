@@ -26,9 +26,7 @@ public class ExampleAgentOne extends Agent{
 		this(PlayerTurn.PLAYER_ONE);
 	}
 	
-	public ExampleAgentOne(String name) {
-		super(name, PlayerTurn.PLAYER_ONE);
-	}
+
 	
 	public ExampleAgentOne(PlayerTurn playerTurn) {
 		super(playerTurn);
