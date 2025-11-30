@@ -558,11 +558,13 @@ public class OthelloGameView{
 		}
 
 		@Override
-		public void displayInformation(int depthCounter, int leafCounter, int pruneCounter, int nodesExamined) {
+		public void displayInformation(int depthCounter, int leafCounter, int pruneCounter, int nodesExamined, long turnDurationMillis) {
 			gameInfoView.updateInfo(1, String.valueOf(depthCounter));
 			gameInfoView.updateInfo(2, String.valueOf(pruneCounter));
 			gameInfoView.updateInfo(3, String.valueOf(leafCounter));
 			gameInfoView.updateInfo(4, String.valueOf(nodesExamined));
+            String durationText = String.format("%.2f s", turnDurationMillis / 1000.0);
+            gameInfoView.updateInfo(6, durationText);
 		}
 
 		@Override

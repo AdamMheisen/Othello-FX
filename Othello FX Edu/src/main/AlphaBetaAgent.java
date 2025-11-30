@@ -11,7 +11,7 @@ import com.eudycontreras.othello.controllers.AgentController;
 import java.util.List;
 
 public class AlphaBetaAgent extends Agent {
-    private static final int MAX_DEPTH = 8;
+    private static final int MAX_DEPTH = 6;
 
     private static final long TIME_LIMIT_MILLIS = 4800L;
 
@@ -34,9 +34,7 @@ public class AlphaBetaAgent extends Agent {
 
         // check for null before isEmpty to avoid NPE
         if (moves == null || moves.isEmpty()) {
-            long durationMillis = System.currentTimeMillis() - startTime;
-            String durationText = String.format("%.2f s", durationMillis / 1000.0);
-            AgentController.updateGameInfo(6, durationText);
+
             return null;
         }
 
