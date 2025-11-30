@@ -12,7 +12,7 @@ import java.util.List;
 
 public class AlphaBetaAgent extends Agent {
 
-    private static final int MAX_DEPTH = 6;
+    private static final int MAX_DEPTH = 5;
     private static final long TIME_LIMIT_MILLIS = 4800L;
 
     public AlphaBetaAgent(String agentName, PlayerTurn playerTurn) {
