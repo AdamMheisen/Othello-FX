@@ -32,7 +32,7 @@ public class AlphaBetaAgent extends Agent {
 
         List<ObjectiveWrapper> moves = AgentController.getAvailableMoves(gameState, playerTurn);
 
-        // check for null before isEmpty to avoid NPE
+        //This is here so it doesn't crash when the game is over
         if (moves == null || moves.isEmpty()) {
 
             return null;
@@ -43,7 +43,23 @@ public class AlphaBetaAgent extends Agent {
         for (ObjectiveWrapper move : moves) {
             GameBoardState child = AgentController.getNewState(gameState, move);
 
-            // evaluate the child state after AI move; next player is opponent
+            /**
+             * This line starts the alpha-beta search for one of the AI’s possible moves.
+             * The AI has already made the move, so we pass the resulting board (“child”).
+             * We reduce the depth by one, because the top level was handled in getMove.
+             * The next player in the simulation is the opponent, so we pass their turn.
+             * Alpha and beta start at negative and positive infinity as usual.
+             * We also pass the global time limit so the search stops if time runs out.
+             * The current depth is set to 1 because we are one level below the root.
+             *
+             * @param child                     The board game state after making the move
+             * @param MAX_DEPTH                 The maximum depth to search
+             * @param Double.NEGATIVE_INFINITY  The initial alpha value
+             * @param Double.POSITIVE_INFINITY  The initial beta value
+             * @param getOpponent(playerTurn)   The opponent's turn
+             * @param endTime                   The time limit for the search
+             * @return                          The evaluated value of the move
+             */
             double value = alphaBeta(
                     child,
                     MAX_DEPTH - 1,
@@ -67,6 +83,28 @@ public class AlphaBetaAgent extends Agent {
         return new MoveWrapper(bestMove);
     }
 
+    /**
+     * This method runs a minimax search with alpha-beta pruning.
+     * It checks three things before searching deeper:
+     * (1) if the time limit is reached,
+     * (2) if the depth limit is reached,
+     * (3) if the position is terminal.
+     * In those cases it returns a heuristic value.
+     *
+     * If it’s the AI’s turn, the method tries to maximize the score.
+     * If it’s the opponent’s turn, it tries to minimize the score.
+     * Alpha and beta values are updated, and branches are skipped when they cannot change the final result (alpha ≥ beta).
+     *
+     * @param state         The current board position being evaluated.
+     * @param depth         How many levels deeper the search is allowed to go.
+     * @param alpha         The best score the maximizing player has found so far.
+     * @param beta          The best score the minimizing player has found so far.
+     * @param currentPlayer Which player is about to move at this node.
+     * @param endTime       Absolute time limit; used to stop the search if time runs out.
+     * @param currentDepth  The current depth in the search tree (used for statistics).
+     *
+     * @return A heuristic evaluation of the state from the AI’s perspective.
+     */
     private double alphaBeta( GameBoardState state, int depth, double alpha, double beta, PlayerTurn currentPlayer, long endTime, int currentDepth) {
         nodesExamined++;
 
@@ -99,7 +137,6 @@ public class AlphaBetaAgent extends Agent {
             double value = Double.NEGATIVE_INFINITY;
             for (ObjectiveWrapper move : moves) {
                 GameBoardState child = AgentController.getNewState(state, move);
-                // pass opponent of currentPlayer to alternate turns correctly
                 value = Math.max(value, alphaBeta(child, depth -1, alpha, beta, getOpponent(currentPlayer), endTime, currentDepth + 1 ));
                 alpha = Math.max(alpha, value);
 
